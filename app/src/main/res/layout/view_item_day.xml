@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background"
+        android:paddingBottom="@dimen/_8dp"
+        android:paddingTop="@dimen/_8dp">
+
+    <TextView
+            android:id="@+id/tvDateDay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_toStartOf="@id/ivCondition"
+            android:textColor="@color/_black"
+            android:textSize="@dimen/_16sp" />
+
+    <ImageView
+            android:id="@+id/ivConditionDay"
+            android:layout_width="@dimen/_48dp"
+            android:layout_height="@dimen/_48dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            tools:ignore="ContentDescription" />
+
+    <TextView
+            android:id="@+id/tvTemperatureDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_32dp"
+            android:textColor="@color/_black"
+            android:textSize="@dimen/_22sp" />
+
+</RelativeLayout>

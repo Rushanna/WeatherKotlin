@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WeatherKotlin</string>
+    <string name="temperature_format">%1$d°</string>
+    <string name="temperature_feels_like_format">feels like %1$d°</string>
+    <string name="Message">You need to allow access to Location</string>
+
+</resources>
