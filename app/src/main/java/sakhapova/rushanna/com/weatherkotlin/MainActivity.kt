@@ -29,7 +29,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import sakhapova.rushanna.com.weatherkotlin.Constants.Companion.REQUEST_CODE_LOCATION_PERMISSION
 import sakhapova.rushanna.com.weatherkotlin.adapter.WeatherAdapter
 import sakhapova.rushanna.com.weatherkotlin.forecast.WeatherData
 import sakhapova.rushanna.com.weatherkotlin.forecast.api.ApiInterface
@@ -57,66 +56,69 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         swipeRefreshLayout = swipeСontainer
         swipeRefreshLayout?.setOnRefreshListener(this)
         swipeRefreshLayout?.setColorSchemeColors(
-            Color.RED, Color.GREEN, Color.BLUE, Color.CYAN)
+            Color.RED, Color.GREEN, Color.BLUE, Color.CYAN
+        )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val w = window
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            w.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
         }
 
         checkAndRequestGeoPermission()
     }
 
-    private fun showMessageOK(message:String, okListener: DialogInterface.OnClickListener) {
+    private fun showMessageOK(message: String, okListener: DialogInterface.OnClickListener) {
         AlertDialog.Builder(this@MainActivity)
             .setMessage(message)
             .setPositiveButton("OK", okListener)
             .create()
             .show()
     }
+
     private fun openApplicationSettings() {
         val appSettingsIntent = Intent(
             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.parse("package:$packageName"))
+            Uri.parse("package:$packageName")
+        )
         startActivityForResult(appSettingsIntent, REQUEST_CODE_LOCATION_PERMISSION)
     }
+
     private fun checkAndRequestGeoPermission() {
-        val permissionCheck = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_FINE_LOCATION)
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this,
+        val permissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_CODE_LOCATION_PERMISSION)
-        }
-        else
-        {
+                REQUEST_CODE_LOCATION_PERMISSION
+            )
+        } else {
             setupLocationManager()
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun onRequestPermissionsResult(requestCode:Int,permissions:Array<String>, grantResults:IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION)
-        {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED))
-            {
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 setupLocationManager()
-            }
-            else
-            {
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION))
-                {
+            } else {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     showMessageOK(getString(R.string.Message),
                         DialogInterface.OnClickListener { _, _ ->
-                            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                                REQUEST_CODE_LOCATION_PERMISSION)
+                            requestPermissions(
+                                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                                REQUEST_CODE_LOCATION_PERMISSION
+                            )
                             openApplicationSettings()
                         })
-                }
-                else
-                {
+                } else {
                     checkAndRequestGeoPermission()
                 }
             }
@@ -139,33 +141,34 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
             val provider = locationManager!!.getBestProvider(Criteria(), true)
 
             if (provider != null) {
-                loadData(Constants.AUTO_IP_QUERY)
-                locationManager?.requestLocationUpdates(provider,
+                loadData(AUTO_IP_QUERY)
+                locationManager?.requestLocationUpdates(
+                    provider,
                     10000,
                     10f,
-                    locationListener)
+                    locationListener
+                )
             }
         }
     }
 
-    private fun loadData(query:String) {
+    private fun loadData(query: String) {
         swipeRefreshLayout?.isRefreshing = true
-        api.getForecast(Constants.API_KEY, query, 10).enqueue(object: Callback<WeatherData> {
+        api.getForecast(API_KEY, query, 10).enqueue(object : Callback<WeatherData> {
             override fun onResponse(call: Call<WeatherData>, response: Response<WeatherData>) {
                 swipeRefreshLayout?.isRefreshing = false
-                if (response.isSuccessful)
-                {
+                if (response.isSuccessful) {
                     weatherAdapter?.weatherData = response.body()
                     weatherAdapter?.notifyDataSetChanged()
-                }
-                else
-                {
+                } else {
                     Toast.makeText(applicationContext, "Unknown error.", Toast.LENGTH_LONG).show()
                 }
             }
-            override fun onFailure(call: Call<WeatherData>, t:Throwable) {
+
+            override fun onFailure(call: Call<WeatherData>, t: Throwable) {
                 swipeRefreshLayout?.isRefreshing = false
-                Toast.makeText(applicationContext, "Unable to load data. Check Internet connection.", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "Unable to load data. Check Internet connection.", Toast.LENGTH_LONG)
+                    .show()
             }
         })
     }
@@ -190,6 +193,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        loadData(Constants.AUTO_IP_QUERY)
+        loadData(AUTO_IP_QUERY)
     }
 }

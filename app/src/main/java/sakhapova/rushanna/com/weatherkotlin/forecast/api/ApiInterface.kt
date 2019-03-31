@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import sakhapova.rushanna.com.weatherkotlin.Constants
+import sakhapova.rushanna.com.weatherkotlin.API_BASE_URL
 import sakhapova.rushanna.com.weatherkotlin.forecast.WeatherData
 
 interface ApiInterface {
@@ -22,7 +22,7 @@ interface ApiInterface {
 
         fun createApi(): ApiInterface {
             val retrofit = Retrofit.Builder()
-                .baseUrl(Constants.API_BASE_URL)
+                .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
